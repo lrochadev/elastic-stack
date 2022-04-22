@@ -1,0 +1,34 @@
+version: '3.2'
+ 
+services:
+  filebeat:
+    hostname: filebeat
+    build:
+      context: ./filebeat
+    volumes:
+        - /var/lib/docker/containers:/var/lib/docker/containers:ro           # Docker logs
+        - /var/run/docker.sock:/var/run/docker.sock:ro                       # Additional information about containers
+        - ./filebeat/data:/usr/share/filebeat/data:rw                        # Persistence data
+    links:
+      - elasticsearch
+
+  elasticsearch:
+    build:
+      context: ./elasticsearch/
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      - cluster.name=logging-cluster
+      - ES_JAVA_OPTS=-Xms1024m -Xmx1024m
+      - discovery.type=single-node
+  
+  kibana:
+    build:
+      context: ./kibana/
+    ports:
+      - "5601:5601"
+    environment:
+      - "LOGGING_QUIET=true"
+    depends_on:
+      - elasticsearch
