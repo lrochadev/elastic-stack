@@ -2,6 +2,7 @@ version: '3.2'
  
 services:
   filebeat:
+    container_name: filebeat      
     hostname: filebeat
     build:
       context: ./filebeat
@@ -13,6 +14,7 @@ services:
       - elasticsearch
 
   elasticsearch:
+    container_name: elasticsearch
     build:
       context: ./elasticsearch/
     ports:
@@ -24,6 +26,7 @@ services:
       - discovery.type=single-node
   
   kibana:
+    container_name: kibana
     build:
       context: ./kibana/
     ports:
