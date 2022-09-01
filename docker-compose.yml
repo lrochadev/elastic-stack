@@ -24,6 +24,8 @@ services:
       - cluster.name=logging-cluster
       - ES_JAVA_OPTS=-Xms1024m -Xmx1024m
       - discovery.type=single-node
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
   
   kibana:
     container_name: kibana
@@ -35,3 +37,6 @@ services:
       - "LOGGING_QUIET=true"
     depends_on:
       - elasticsearch
+
+volumes:
+    elasticsearch_data:
